@@ -1,206 +1,133 @@
-// Базовый класс Животное
-class Animal {
-    private static int animalCount = 0; // Счетчик животных
+interface Shape {
+    double area(); // Метод для расчета площади
+    double perimeter(); // Метод для расчета периметра
 
-    public Animal() {
-        animalCount++;
-    }
+    String getFillColor(); // Метод для получения цвета заливки
+    String getBorderColor(); // Метод для получения цвета границы
 
-    public static int getAnimalCount() {
-        return animalCount;
-    }
-
-    public void run(int distance) {
-        System.out.println("Животное пробежало " + distance + " метров.");
-    }
-
-    public void swim(int distance) {
-        System.out.println("Животное проплыло " + distance + " метров.");
+    // Дефолтный метод для вывода характеристик фигуры
+    default void printCharacteristics() {
+        System.out.println("Площадь: " + area());
+        System.out.println("Периметр: " + perimeter());
+        System.out.println("Цвет заливки: " + getFillColor());
+        System.out.println("Цвет границы: " + getBorderColor());
     }
 }
+class Circle implements Shape {
+    private double radius;
+    private String fillColor;
+    private String borderColor;
 
-// Класс Собака, наследуется от Животное
-class Dog extends Animal {
-    private static int dogCount = 0; // Счетчик собак
-
-    public Dog() {
-        super(); // Вызов конструктора базового класса
-        dogCount++;
-    }
-
-    public static int getDogCount() {
-        return dogCount;
+    public Circle(double radius, String fillColor, String borderColor) {
+        this.radius = radius;
+        this.fillColor = fillColor;
+        this.borderColor = borderColor;
     }
 
     @Override
-    public void run(int distance) {
-        if (distance <= 500) {
-            System.out.println("Собака пробежала " + distance + " метров.");
-        } else {
-            System.out.println("Собака не может пробежать больше 500 метров.");
-        }
+    public double area() {
+        return Math.PI * radius * radius; // Площадь круга
     }
 
     @Override
-    public void swim(int distance) {
-        if (distance <= 10) {
-            System.out.println("Собака проплыла " + distance + " метров.");
-        } else {
-            System.out.println("Собака не может проплыть больше 10 метров.");
-        }
-    }
-}
-
-// Класс Кот, наследуется от Животное
-class Cat extends Animal {
-    private static int catCount = 0; // Счетчик котов
-    private Bowl bowl; // Миска с едой
-    private boolean isFull; // Поле сытости
-    public Cat(Bowl bowl) {
-        super(); // Вызов конструктора базового класса
-        catCount++;
-        this.bowl = bowl; // Инициализация миски
-        this.isFull = false; // Кот изначально голоден
-    }
-
-    public static int getCatCount() {
-        return catCount;
+    public double perimeter() {
+        return 2 * Math.PI * radius; // Периметр круга
     }
 
     @Override
-    public void run(int distance) {
-        if (distance <= 200) {
-            System.out.println("Кот пробежал " + distance + " метров.");
-        } else {
-            System.out.println("Кот не может пробежать больше 200 метров.");
-        }
+    public String getFillColor() {
+        return fillColor;
     }
 
     @Override
-    public void swim(int distance) {
-        System.out.println("Кот не умеет плавать.");
-    }
-
-    public void eat(int amount) { // Проверяем, достаточно ли еды в миске для кормления кота
-        if (bowl.getFoodAmount() < amount)
-        {
-            System.out.println("Недостаточно еды в миске. Кот не может поесть");
-            return; // Кот не ест, если еды не доcтаточно
-        }
-        int eaten = bowl.eat(amount); //Кот ест из миски
-        if (eaten > 0) {  // Если кот поел
-            isFull = true; // Устанавливаем сытость в true
-            System.out.println("Кот теперь сыт");
-        }
-    }
-    public boolean isFull() {
-        return isFull; // Метод для проверки сытости кота
+    public String getBorderColor() {
+        return borderColor;
     }
 }
-// Класс Миска
-class Bowl {
-    private int foodAmount;
+class Rectangle implements Shape {
+    private double width;
+    private double height;
+    private String fillColor;
+    private String borderColor;
 
-    public Bowl(int initialFood) {
-        this.foodAmount = initialFood;
+    public Rectangle(double width, double height, String fillColor, String borderColor) {
+        this.width = width;
+        this.height = height;
+        this.fillColor = fillColor;
+        this.borderColor = borderColor;
     }
 
-    public void feed(int amount) {
-        if (amount <= 0) {
-            System.out.println("Количество еды должно быть положительным.");
-            return;
-        }
-
-        foodAmount += amount;
-        System.out.println("В миске теперь " + foodAmount + " единиц еды.");
+    @Override
+    public double area() {
+        return width * height; // Площадь прямоугольника
     }
 
-    public int eat(int amount) {
-        if (amount <= 0) {
-            System.out.println("Количество еды должно быть положительным.");
-            return 0;
-        }
-
-        if (amount > foodAmount) {
-            System.out.println("Недостаточно еды в миске. Кот съел только " + foodAmount + " единиц.");
-            int eaten = foodAmount;
-            foodAmount = 0; // Миска опустошена
-            return eaten;
-        } else {
-            foodAmount -= amount;
-            System.out.println("Кот съел " + amount + " единиц еды. В миске осталось " + foodAmount + " единиц.");
-            return amount;
-        }
-    }
-    public int getFoodAmount() {  // Метод для получения количества еды в миске
-        return foodAmount;
+    @Override
+    public double perimeter() {
+        return 2 * (width + height); // Периметр прямоугольника
     }
 
-    public void addFood(int amount) {
-        if (amount <= 0) {
-            System.out.println("Количество добавляемой еды должно быть положительным");
-            return;
-        }
+    @Override
+    public String getFillColor() {
+        return fillColor;
+    }
 
-    foodAmount += amount;
-    System.out.println("Добавлено " + amount + " единиц еды. В миске теперь " + foodAmount + " единиц.");
+    @Override
+    public String getBorderColor() {
+        return borderColor;
     }
 }
+class Triangle implements Shape {
+    private double a; // Сторона A
+    private double b; // Сторона B
+    private double c; // Сторона C
+    private String fillColor;
+    private String borderColor;
 
-// Основной класс для тестирования
+    public Triangle(double a, double b, double c, String fillColor, String borderColor) {
+        this.a = a;
+        this.b = b;
+        this.c = c;
+        this.fillColor = fillColor;
+        this.borderColor = borderColor;
+    }
+
+    @Override
+    public double area() {
+        double s = (a + b + c) / 2; // Полупериметр
+        return Math.sqrt(s * (s - a) * (s - b) * (s - c)); // Площадь по формуле Герона
+    }
+
+    @Override
+    public double perimeter() {
+        return a + b + c; // Периметр треугольника
+    }
+
+    @Override
+    public String getFillColor() {
+        return fillColor;
+    }
+
+    @Override
+    public String getBorderColor() {
+        return borderColor;
+    }
+}
 public class Main {
     public static void main(String[] args) {
-        Bowl catBowl = new Bowl(50); //Создаем миску с 50 единицами еды
-        Dog dog1 = new Dog();
-        Cat cat1 = new Cat(catBowl);
+        Shape circle = new Circle(5, "Красный", "Черный");
+        Shape rectangle = new Rectangle(4, 6, "Зеленый", "Синий");
+        Shape triangle = new Triangle(3, 4, 5, "Желтый", "Фиолетовый");
 
-        Cat[] cats = new Cat[5]; //Создаем массив котов
-        for (int i = 0; i < cats.length; i++)
-        {
-            cats[i] = new Cat(catBowl); // Каждому коту передаем одну  и ту же миску
-        }
+        System.out.println("Характеристики круга:");
+        circle.printCharacteristics();
 
-        dog1.run(300); // Собака пробежала 300 метров.
-        dog1.run(550); // Собака не может пробежать больше 500 метров.
-        dog1.swim(5); // Собака проплыла 5 метров.
-        dog1.swim(11); // Собака не может проплыть больше 10 метров.
+        System.out.println("\nХарактеристики прямоугольника:");
+        rectangle.printCharacteristics();
 
-        cat1.run(150); // Кот пробежал 150 метров.
-        cat1.run(250); // Кот не может пробежать больше 200 метров.
-        cat1.swim(5);  // Кот не умеет плавать.
+        System.out.println("\nХарактеристики треугольника:");
+        triangle.printCharacteristics();
 
-        // Проверяем сытость кота перед кормлением
-        System.out.println("Кот сыт? " + cat1.isFull());
-
-        // Кормим кота
-        cat1.eat(25); // Недостаточно еды в миске. Кот не может поесть.
-        cat1.eat(5); // Кот съел 5 единиц еды
-        System.out.println("Кот сыт? " + cat1.isFull()); // Проверяем сытость после первого кормления
-        cat1.eat(10); // Кот съел 10 единиц еды
-        System.out.println("Кот сыт? " + cat1.isFull()); // Проверяем сытость после второго кормления
-        cat1.eat(10); // Недостаточно еды в миске. Кот не может поесть.
-
-        // Добавляем еду в миску
-        catBowl.addFood(30); // Добавляем 30 единиц
-
-        // Коты пытаются покушать
-        for (int i = 0; i < cats.length; i++)
-        {
-            System.out.println("Кот " + i + 1 + " пытается поесть:");
-            cats[i].eat(15); // Каждый кот пытается съесть 15 единиц еды
-            System.out.println("Кот " + (i + 1) + " сыт?" + cats[i].isFull());
-            System.out.println();
-        }
-
-        // Выводим общую информацию о сытости всех котов
-        System.out.println("Информация о сытости всех котов из массива:");
-        for (int i = 0; i < cats.length; i++) {
-            System.out.println("Кот " + (i + 1) + " сыт? " + cats[i].isFull());
-        }
-
-        System.out.println("Всего животных: " + Animal.getAnimalCount());
-        System.out.println("Всего собак: " + Dog.getDogCount());
-        System.out.println("Всего котов: " + Cat.getCatCount());
+        System.out.println("\nВсего фигур: " + 3);
     }
 }
-
